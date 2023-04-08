@@ -32,15 +32,13 @@ namespace IdentityServer
             };
 
         // Scopes represent what a client application is allowed to do.
-        public static IEnumerable<ApiScope> GetApiScopes()
-        {
-            return new List<ApiScope>
+        public static IEnumerable<ApiScope> ApiScopes() =>
+            new List<ApiScope>
             {
                 new ApiScope(name: "eventsApi.create"),
                 new ApiScope(name: "eventsApi.delete"),
                 new ApiScope(name: "eventsApi.update"),
                 new ApiScope(name: "eventsApi.read")
             };
-        }
     }
 }
