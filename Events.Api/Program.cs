@@ -1,4 +1,7 @@
+using Events.Api.Extensions;
+using Infrastucture.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +18,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 // it's recommended to check the type header to avoid "JWT confusion" attacks
                 options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
             });
+
+var connectionString = builder.Configuration.GetConnectionString("ConnectionStringOrg");
+builder.Services.AddDbContext<EventsDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -69,6 +76,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+await app.UseDatabaseSeed();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
