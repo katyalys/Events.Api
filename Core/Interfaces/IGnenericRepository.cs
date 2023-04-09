@@ -12,7 +12,7 @@ namespace Core.Interfaces
 		Task<T> GetByIdAsync(int id);
 		Task<IReadOnlyList<T>> ListAllAsync();
 		Task AddAsync(T entity);
-		void Update(T entity);
+		Task UpdateAsync(T entity);
 		Task DeleteAsync(T entity);
 		Task SaveAsync();
 	}

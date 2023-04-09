@@ -45,10 +45,11 @@ namespace Infrastucture
 			await _context.SaveChangesAsync();
 		}
 
-		public void Update(T entity)
+		public async Task UpdateAsync(T entity)
 		{
 			_context.Set<T>().Attach(entity);
 			_context.Entry(entity).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
 		}
 	}
 }
