@@ -2,7 +2,7 @@
 using Core.Entity;
 using MediatR;
 
-namespace Events.Api.Resources.Update
+namespace Events.Api.Resources.Commands.Update
 {
     public class UpdateEventCommand : IRequest<EventModel>
     {

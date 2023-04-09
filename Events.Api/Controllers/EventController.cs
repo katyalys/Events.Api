@@ -1,7 +1,8 @@
 using Application.Models;
 using Events.Api.Resources.Commands.Create;
 using Events.Api.Resources.Commands.Delete;
-using Events.Api.Resources.Update;
+using Events.Api.Resources.Commands.Update;
+using Events.Api.Resources.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +57,21 @@ namespace Events.Api.Controllers
             {
                 var response = await _mediator.Send(updateEventCommand);
                 return response is not null ? Ok() : NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllEvents()
+        {
+            try
+            {
+                var command = new GetAllEventsQuery();
+                var response = await _mediator.Send(command);
+                return response is not null ? Ok(response) : NotFound();
             }
             catch (Exception ex)
             {

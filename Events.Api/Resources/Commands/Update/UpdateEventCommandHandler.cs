@@ -4,7 +4,7 @@ using Core.Interfaces;
 using Mapster;
 using MediatR;
 
-namespace Events.Api.Resources.Update
+namespace Events.Api.Resources.Commands.Update
 {
     public class UpdateEventCommandHandler: IRequestHandler<UpdateEventCommand, EventModel>
     {
