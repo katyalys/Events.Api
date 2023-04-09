@@ -11,9 +11,7 @@ namespace Application.Mapper
         public void Register(TypeAdapterConfig config)
         {
             config.NewConfig<Event, EventDto>()
-                    .TwoWays()
-                    .Map(dest => dest.Place, src => src.Location)
-                    .Map(dest => dest.DateTime, src => src.Date);
+                    .TwoWays();
 
             config.NewConfig<EventDto, CreateEventCommand>()
                   .TwoWays()

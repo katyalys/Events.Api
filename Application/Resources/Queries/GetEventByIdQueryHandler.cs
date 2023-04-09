@@ -1,4 +1,5 @@
-﻿using Application.Models;
+﻿using Application.Exceptions;
+using Application.Models;
 using Core.Entity;
 using Core.Interfaces;
 using Mapster;
@@ -23,7 +24,7 @@ namespace Application.Resources.Queries
             var existingEvent = await _eventRepository.GetByIdAsync(request.Id);
             if (existingEvent == null)
             {
-                throw new ApplicationException("Product with this id is not exists");
+                throw new EntityNotFoundException("No events");
             }
             var eventById = _mapper.Map<EventDto>(existingEvent);
             return eventById;

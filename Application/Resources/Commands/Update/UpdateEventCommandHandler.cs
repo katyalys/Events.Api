@@ -1,4 +1,5 @@
-﻿using Application.Models;
+﻿using Application.Exceptions;
+using Application.Models;
 using Core.Entity;
 using Core.Interfaces;
 using Mapster;
@@ -21,6 +22,9 @@ namespace Application.Commands.Update
         public async Task<int> Handle(UpdateEventCommand request, CancellationToken cancellationToken)
         {
             var eventUpdated = _mapper.Map<Event>(request);
+            if (eventUpdated == null)
+                throw new EntityNotFoundException("Event with this id is not exists");
+
             await _eventRepository.UpdateAsync(eventUpdated);
             return eventUpdated.Id;
         }

@@ -1,4 +1,5 @@
-﻿using Application.Models;
+﻿using Application.Exceptions;
+using Application.Models;
 using Application.Resources.Commands.Delete;
 using Core.Entity;
 using Core.Interfaces;
@@ -24,7 +25,7 @@ namespace Application.Commands.Delete
             var existingProduct = await _eventRepository.GetByIdAsync(request.Id);
             if (existingProduct == null)
             {
-                throw new ApplicationException("Product with this id is not exists");
+                throw new EntityNotFoundException("Event with this id is not exists");
             }
             var newEvent = _mapper.Map<EventDto>(existingProduct);
             await _eventRepository.DeleteAsync(existingProduct);

@@ -1,4 +1,5 @@
-﻿using Application.Models;
+﻿using Application.Exceptions;
+using Application.Models;
 using Core.Entity;
 using Core.Interfaces;
 using Mapster;
@@ -20,6 +21,10 @@ namespace Application.Resources.Queries
         public async Task<IEnumerable<EventDto>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
         {
             var events = await _eventRepository.ListAllAsync();
+            if (events == null)
+            {
+                throw new EntityNotFoundException("Event with this id is not exists");
+            }
             var eventsModel = _mapper.Map<IEnumerable<EventDto>>(events);
             return eventsModel;
         }

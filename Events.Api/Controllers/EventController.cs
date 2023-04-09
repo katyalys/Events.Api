@@ -1,4 +1,5 @@
 using Application.Commands.Update;
+using Application.Exceptions;
 using Application.Models;
 using Application.Resources.Commands.Create;
 using Application.Resources.Commands.Delete;
@@ -25,13 +26,15 @@ namespace Events.Api.Controllers
         }
 
         [HttpPost("Create")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateEvent(EventDto eventCreate)
         {
             try
             {
                 var command = _mapper.Map<CreateEventCommand>(eventCreate);
-                int? response = await _mediator.Send(command);
-                return response is not null ? Ok(response) : NotFound();
+                int response = await _mediator.Send(command);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -40,13 +43,20 @@ namespace Events.Api.Controllers
         }
 
         [HttpDelete("Delete")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteEvent(int id)
         {
             try
             {
                 var command = new DeleteByIdEventCommand() { Id = id };
-                int? response = await _mediator.Send(command);
-                return response is not null ? Ok() : NotFound();
+                int response = await _mediator.Send(command);
+                return Ok();
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -55,13 +65,20 @@ namespace Events.Api.Controllers
         }
 
         [HttpPut("Update")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateEvent(EventDto eventUpdate)
         {
             try
             {
                 var command = _mapper.Map<UpdateEventCommand>(eventUpdate);
-                int? response = await _mediator.Send(command);
-                return response is not null ? Ok() : NotFound();
+                int response = await _mediator.Send(command);
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -70,6 +87,9 @@ namespace Events.Api.Controllers
         }
 
         [HttpGet("GetAllEvents")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAllEvents()
         {
             try
@@ -78,6 +98,10 @@ namespace Events.Api.Controllers
                 var response = await _mediator.Send(command);
                 return response is not null ? Ok(response) : NotFound();
             }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -85,13 +109,20 @@ namespace Events.Api.Controllers
         }
 
         [HttpGet("GetEventById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEventById(int id)
         {
             try
             {
                 var command = new GetEventByIdQuery() { Id = id};
                 var response = await _mediator.Send(command);
-                return response is not null ? Ok(response) : NotFound();
+                return Ok(response);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
