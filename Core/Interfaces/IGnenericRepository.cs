@@ -13,7 +13,7 @@ namespace Core.Interfaces
 		Task<IReadOnlyList<T>> ListAllAsync();
 		Task AddAsync(T entity);
 		void Update(T entity);
-		void Delete(T entity);
+		Task DeleteAsync(T entity);
 		Task SaveAsync();
 	}
 }
