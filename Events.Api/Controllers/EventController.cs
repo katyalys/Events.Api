@@ -64,12 +64,27 @@ namespace Events.Api.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("GetAllEvents")]
         public async Task<IActionResult> GetAllEvents()
         {
             try
             {
                 var command = new GetAllEventsQuery();
+                var response = await _mediator.Send(command);
+                return response is not null ? Ok(response) : NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetEventById")]
+        public async Task<IActionResult> GetEventById(int id)
+        {
+            try
+            {
+                var command = new GetEventByIdQuery() { Id = id};
                 var response = await _mediator.Send(command);
                 return response is not null ? Ok(response) : NotFound();
             }
