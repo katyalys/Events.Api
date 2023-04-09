@@ -1,9 +1,11 @@
+using Application.Models;
 using Core.Entity;
 using Core.Interfaces;
 using Events.Api.Extensions;
 using Events.Api.Resources.Commands.Create;
 using Infrastucture;
 using Infrastucture.Data;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +34,12 @@ builder.Services.AddDbContext<EventsDbContext>(options =>
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+TypeAdapterConfig<Event, EventModel>
+                .NewConfig()
+                .TwoWays()
+                .Map(dest => dest.Place, src => src.Location)
+                .Map(dest => dest.DateTime, src => src.Date);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -104,28 +112,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapPost("event/create", async (IMediator _mediator, Event product) =>
-{
-    try
-    {
-        var command = new CreateEventCommand()
-        {
-            Theme = product.Theme,
-            Description = product.Description,
-            Plan = product.Plan,
-            Organizer = product.Organizer,
-            Speaker = product.Speaker,
-            Date = product.Date,
-            Location = product.Location,
-        };
-        var response = await _mediator.Send(command);
-        return response is not null ? Results.Ok(response) : Results.NotFound();
-    }
-    catch (Exception ex)
-    {
-        return Results.BadRequest(ex.Message);
-    }
-});
 
 app.Run();

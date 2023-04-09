@@ -13,7 +13,7 @@ namespace Application.Models
         public string? Plan { get; set; }
         public string? Organizer { get; set; }
         public string? Speaker { get; set; }
-        public DateTime? Date { get; set; }
-        public string? Location { get; set; }
+        public DateTime? DateTime { get; set; }
+        public string? Place { get; set; }
     }
 }

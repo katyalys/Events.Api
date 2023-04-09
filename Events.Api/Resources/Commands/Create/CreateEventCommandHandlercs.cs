@@ -3,12 +3,13 @@ using Core.Entity;
 using Core.Interfaces;
 using Events.Api.Resources.Commands.Create;
 using Infrastucture.Data;
+using Mapster;
 using MediatR;
 
 namespace Events.Api.Resources.Commands
 {
     // CHANGE CHANGE CHANGE!!!!
-    public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Event>
+    public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, EventModel>
     {
         private readonly IGenericRepository<Event> _eventRepository;
 
@@ -17,23 +18,24 @@ namespace Events.Api.Resources.Commands
             _eventRepository = eventRepository;
         }
 
-        public async Task<Event> Handle(CreateEventCommand request, CancellationToken cancellationToken)
+        public async Task<EventModel> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {
-            // add mapper here!!!!!!!!!!!!
-            var eventModel = new Event
-            {
-                Theme = request.Theme,
-                Description = request.Description,
-                Plan = request.Plan,
-                Organizer = request.Organizer,
-                Speaker = request.Speaker,
-                Date = request.Date,
-                Location = request.Location,
-            };
+            //// add mapper here!!!!!!!!!!!!
+            //var eventModel = new EventModel
+            //{
+            //    Theme = request.Theme,
+            //    Description = request.Description,
+            //    Plan = request.Plan,
+            //    Organizer = request.Organizer,
+            //    Speaker = request.Speaker,
+            //    DateTime = request.DateTime,
+            //    Place = request.Place,
+            //};
 
-            await _eventRepository.AddAsync(eventModel);
+            var newEvent = request.NewEvent.Adapt<Event>();
+            await _eventRepository.AddAsync(newEvent);
             await _eventRepository.SaveAsync();
-            return eventModel; 
+            return request.NewEvent; 
         }
     }
 }
