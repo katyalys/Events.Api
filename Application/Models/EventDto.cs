@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Models
 {
-    public class EventModel
+    public class EventDto
     {
         public int Id { get; set; }
         public string? Theme { get; set; }

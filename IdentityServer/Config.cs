@@ -4,7 +4,6 @@ namespace IdentityServer
 {
     public class Config
     {
-        // приложения которые будут пользоваться апи
         public static IEnumerable<Client> Clients =>
             new Client[]
             {
@@ -20,7 +19,6 @@ namespace IdentityServer
                 },
             };
 
-        // An API is a resource in your system that you want to protect
         public static IEnumerable<ApiResource> ApiResources =>
             new ApiResource[]
             {
@@ -31,7 +29,6 @@ namespace IdentityServer
                 }
             };
 
-        // Scopes represent what a client application is allowed to do.
         public static IEnumerable<ApiScope> ApiScopes() =>
             new List<ApiScope>
             {

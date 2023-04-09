@@ -1,30 +1,34 @@
 ﻿using Application.Models;
+using Application.Resources.Commands.Delete;
 using Core.Entity;
 using Core.Interfaces;
 using Mapster;
+using MapsterMapper;
 using MediatR;
 
-namespace Events.Api.Resources.Commands.Delete
+namespace Application.Commands.Delete
 {
-    public class DeleteEventCommandHandler: IRequestHandler<DeleteByIdEventCommand, EventModel>
+    public class DeleteEventCommandHandler: IRequestHandler<DeleteByIdEventCommand, int>
     {
         private readonly IGenericRepository<Event> _eventRepository;
+        private readonly IMapper _mapper;
 
-        public DeleteEventCommandHandler(IGenericRepository<Event> eventRepository)
+        public DeleteEventCommandHandler(IGenericRepository<Event> eventRepository, IMapper mapper)
         {
             _eventRepository = eventRepository;
+            _mapper = mapper;   
         }
 
-        public async Task<EventModel> Handle(DeleteByIdEventCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(DeleteByIdEventCommand request, CancellationToken cancellationToken)
         {
             var existingProduct = await _eventRepository.GetByIdAsync(request.Id);
             if (existingProduct == null)
             {
                 throw new ApplicationException("Product with this id is not exists");
             }
-            var newEvent = existingProduct.Adapt<EventModel>();
+            var newEvent = _mapper.Map<EventDto>(existingProduct);
             await _eventRepository.DeleteAsync(existingProduct);
-            return newEvent;
+            return newEvent.Id;
         }
     }
 }

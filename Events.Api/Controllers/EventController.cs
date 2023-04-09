@@ -1,8 +1,9 @@
+using Application.Commands.Update;
 using Application.Models;
-using Events.Api.Resources.Commands.Create;
-using Events.Api.Resources.Commands.Delete;
-using Events.Api.Resources.Commands.Update;
-using Events.Api.Resources.Queries;
+using Application.Resources.Commands.Create;
+using Application.Resources.Commands.Delete;
+using Application.Resources.Queries;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,18 +16,21 @@ namespace Events.Api.Controllers
     public class EventController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public EventController(IMediator mediator)
+        public EventController(IMediator mediator, IMapper mapper)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> CreateEvent(CreateEventCommand commandCreate)
+        public async Task<IActionResult> CreateEvent(EventDto eventCreate)
         {
             try
             {
-                var response = await _mediator.Send(commandCreate);
+                var command = _mapper.Map<CreateEventCommand>(eventCreate);
+                int? response = await _mediator.Send(command);
                 return response is not null ? Ok(response) : NotFound();
             }
             catch (Exception ex)
@@ -41,7 +45,7 @@ namespace Events.Api.Controllers
             try
             {
                 var command = new DeleteByIdEventCommand() { Id = id };
-                var response = await _mediator.Send(command);
+                int? response = await _mediator.Send(command);
                 return response is not null ? Ok() : NotFound();
             }
             catch (Exception ex)
@@ -51,11 +55,12 @@ namespace Events.Api.Controllers
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateEvent(UpdateEventCommand updateEventCommand)
+        public async Task<IActionResult> UpdateEvent(EventDto eventUpdate)
         {
             try
             {
-                var response = await _mediator.Send(updateEventCommand);
+                var command = _mapper.Map<UpdateEventCommand>(eventUpdate);
+                int? response = await _mediator.Send(command);
                 return response is not null ? Ok() : NotFound();
             }
             catch (Exception ex)

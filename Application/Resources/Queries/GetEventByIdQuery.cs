@@ -1,9 +1,9 @@
 ﻿using Application.Models;
 using MediatR;
 
-namespace Events.Api.Resources.Queries
+namespace Application.Resources.Queries
 {
-    public class GetEventByIdQuery: IRequest<EventModel>
+    public class GetEventByIdQuery: IRequest<EventDto>
     {
         public int Id { get; set; }
     }

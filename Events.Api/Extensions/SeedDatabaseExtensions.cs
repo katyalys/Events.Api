@@ -3,22 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Events.Api.Extensions
 {
-	//public static class SeedDatabaseExtensions
-	//{
-	//	public static void SeedDatabase(IHost host)
-	//	{
-	//		using (var scope = host.Services.CreateScope())
-	//		{
-	//			var services = scope.ServiceProvider;
-	//			var eventsContext = services.GetRequiredService<EventsDbContext>();
-	//			EventsSeed.SeedData(eventsContext);
-	//		}
-	//	}
-	//}
-
 	public static class SeedDatabaseExtensions
 	{
-		public static async Task<WebApplication> UseDatabaseSeed(this WebApplication app)
+		public static async Task<IHost> UseDatabaseSeed(this IHost app)
 		{
 			using var scope = app.Services.CreateScope();
 			var services = scope.ServiceProvider;
